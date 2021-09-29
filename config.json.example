@@ -1,0 +1,8 @@
+{
+  "port":7005,
+  "v":{
+    "env":"T",
+    "maker_seed":"xxxx xxxx xxxx",
+    "gas_pool": "xxxx xxxx xxxx",
+  }
+}

@@ -1,0 +1,55 @@
+definitions:
+  server.RespJsonObj:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+  server.Wallet:
+    properties:
+      address:
+        type: string
+      net_type:
+        type: string
+      private_key:
+        type: string
+      public_key:
+        type: string
+      seed:
+        type: string
+    type: object
+info:
+  contact:
+    email: joy060102@gmail.com
+    name: joy
+    url: https://github.com/jooyyy
+  description: NFT restful api utils
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: v.systems NFT bundle
+  version: "1.0"
+paths:
+  /api/wallet/create:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Wallet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.RespJsonObj'
+      summary: Create a vsys wallet
+      tags:
+      - Wallet
+swagger: "2.0"
