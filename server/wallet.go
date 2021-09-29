@@ -1,6 +1,8 @@
 package server
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/virtualeconomy/go-v-sdk/vsys"
 	"vsys-nft-bundle/config"
@@ -53,4 +55,29 @@ func (s *Service) ImportWallet(c *gin.Context) {
 		Address:    acc.Address(),
 		NetType:    config.Config.V.Env,
 	})
+}
+
+// GetWalletDetail
+// @Summary Get wallet detail
+// @Description
+// @Tags Wallet
+// @Accept  json
+// @Produce json
+// @Param address query string true "Wallet address"
+// @Success 200 {object} WalletDetail ""
+// @Failure 400 {object} RespJsonObj ""
+// @Router /api/wallet/detail [get]
+func (s *Service) GetWalletDetail(c *gin.Context) {
+	resp, err := vsys.GetVsysApi().Get(fmt.Sprintf(vsys.ApiGetAddressDetail, c.Query("address")))
+	if err != nil {
+		respErr(c, err.Error())
+		return
+	}
+	var wallet WalletDetail
+	err = json.Unmarshal(resp, &wallet)
+	if err != nil {
+		respErr(c, err.Error())
+		return
+	}
+	respJson(c, wallet)
 }

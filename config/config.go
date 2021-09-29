@@ -38,10 +38,13 @@ func init() {
 	}else {
 		Config.V.NetType = vsys.Testnet
 		vsys.InitApi (
-			"https://test.v.systems",
+			"http://veldidina.vos.systems:9928",
 			vsys.Testnet,
 		)
 	}
+	acc := vsys.InitAccount(Config.V.NetType)
+	acc.BuildFromSeed(Config.V.MakerSeed, 0)
+	Config.V.Maker = acc.Address()
 	if Config.V.NFTContractId == "" {
 		logrus.Warning("NFT contract id is empty.")
 	}

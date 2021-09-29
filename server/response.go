@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -18,6 +19,7 @@ var statusText = map[int]string{
 }
 
 func respErr(c *gin.Context, msg string) {
+	logrus.Errorln(msg)
 	c.JSON(BadRequest, RespJsonObj{
 		Code: BadRequest,
 		Msg:  msg,

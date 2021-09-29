@@ -1,8 +1,10 @@
 {
-  "port":7005,
+  "port":8000,
   "v":{
     "env":"T",
     "maker_seed":"xxxx xxxx xxxx",
     "gas_pool": "xxxx xxxx xxxx",
+    "node": "https://api.v.systems",
+    "nft_contract_id": "xxxxxxxx"
   }
 }

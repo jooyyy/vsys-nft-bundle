@@ -16,6 +16,195 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/contract/mintNFT": {
+            "post": {
+                "description": "This operation will coast 0.3vsys, please make sure your gas pool wallet has balance",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contract"
+                ],
+                "summary": "Mint a NFT",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NFT description",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Transaction attachment",
+                        "name": "attachment",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.NFT"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.RespJsonObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contract/registerNFT": {
+            "post": {
+                "description": "Before your register the contract, please make sure you have a maker wallet, and your wallet have 100 vsys at least.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contract"
+                ],
+                "summary": "Register NFT contract",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NFT contract description",
+                        "name": "description",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Contract"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.RespJsonObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contract/sendNFT": {
+            "post": {
+                "description": "NFT will be sent from maker wallet to recipient, this operation will coast 0.3vsys",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contract"
+                ],
+                "summary": "Send NFT to recipient wallet",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "NFT index",
+                        "name": "nft_index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "NFT receiver",
+                        "name": "recipient",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Transaction attachment",
+                        "name": "attachment",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "transfer NFT transaction id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.RespJsonObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contract/transferNFT": {
+            "post": {
+                "description": "This operation will coast 0.3vsys, please make sure your gas pool wallet has balance",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contract"
+                ],
+                "summary": "Transfer NFT",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Seed for NFT owner",
+                        "name": "owner_seed",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "NFT index",
+                        "name": "nft_index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "NFT receiver",
+                        "name": "recipient",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Transaction attachment",
+                        "name": "attachment",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "transfer NFT transaction id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.RespJsonObj"
+                        }
+                    }
+                }
+            }
+        },
         "/api/wallet/create": {
             "get": {
                 "consumes": [
@@ -27,7 +216,81 @@
                 "tags": [
                     "Wallet"
                 ],
-                "summary": "Create a vsys wallet",
+                "summary": "Create a v chain wallet",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Wallet"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.RespJsonObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/wallet/detail": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Get wallet detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Wallet address",
+                        "name": "address",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.WalletDetail"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.RespJsonObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/wallet/import": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Import a v chain wallet",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "wallet mnemonic seed",
+                        "name": "seed",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -46,6 +309,104 @@
         }
     },
     "definitions": {
+        "server.Contract": {
+            "type": "object",
+            "properties": {
+                "contract": {
+                    "type": "object",
+                    "properties": {
+                        "descriptors": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "languageCode": {
+                            "type": "string"
+                        },
+                        "languageVersion": {
+                            "type": "integer"
+                        },
+                        "stateVariables": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "triggers": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "contractId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "fee": {
+                    "type": "integer"
+                },
+                "feeScale": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "initData": {
+                    "type": "string"
+                },
+                "proofs": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string"
+                            },
+                            "proofType": {
+                                "type": "string"
+                            },
+                            "publicKey": {
+                                "type": "string"
+                            },
+                            "signature": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "timestamp": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "server.NFT": {
+            "type": "object",
+            "properties": {
+                "attachment": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "index": {
+                    "type": "integer"
+                },
+                "trx_id": {
+                    "type": "string"
+                }
+            }
+        },
         "server.RespJsonObj": {
             "type": "object",
             "properties": {
@@ -66,6 +427,18 @@
                 "address": {
                     "type": "string"
                 },
+                "available": {
+                    "type": "integer"
+                },
+                "effective": {
+                    "type": "integer"
+                },
+                "height": {
+                    "type": "integer"
+                },
+                "mintingAverage": {
+                    "type": "integer"
+                },
                 "net_type": {
                     "type": "string"
                 },
@@ -75,8 +448,34 @@
                 "public_key": {
                     "type": "string"
                 },
+                "regular": {
+                    "type": "integer"
+                },
                 "seed": {
                     "type": "string"
+                }
+            }
+        },
+        "server.WalletDetail": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "available": {
+                    "type": "integer"
+                },
+                "effective": {
+                    "type": "integer"
+                },
+                "height": {
+                    "type": "integer"
+                },
+                "mintingAverage": {
+                    "type": "integer"
+                },
+                "regular": {
+                    "type": "integer"
                 }
             }
         }

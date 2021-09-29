@@ -1,4 +1,68 @@
 definitions:
+  server.Contract:
+    properties:
+      contract:
+        properties:
+          descriptors:
+            items:
+              type: string
+            type: array
+          languageCode:
+            type: string
+          languageVersion:
+            type: integer
+          stateVariables:
+            items:
+              type: string
+            type: array
+          triggers:
+            items:
+              type: string
+            type: array
+        type: object
+      contractId:
+        type: string
+      description:
+        type: string
+      fee:
+        type: integer
+      feeScale:
+        type: integer
+      id:
+        type: string
+      initData:
+        type: string
+      proofs:
+        items:
+          properties:
+            address:
+              type: string
+            proofType:
+              type: string
+            publicKey:
+              type: string
+            signature:
+              type: string
+          type: object
+        type: array
+      timestamp:
+        type: integer
+      type:
+        type: integer
+    type: object
+  server.NFT:
+    properties:
+      attachment:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      index:
+        type: integer
+      trx_id:
+        type: string
+    type: object
   server.RespJsonObj:
     properties:
       code:
@@ -12,14 +76,39 @@ definitions:
     properties:
       address:
         type: string
+      available:
+        type: integer
+      effective:
+        type: integer
+      height:
+        type: integer
+      mintingAverage:
+        type: integer
       net_type:
         type: string
       private_key:
         type: string
       public_key:
         type: string
+      regular:
+        type: integer
       seed:
         type: string
+    type: object
+  server.WalletDetail:
+    properties:
+      address:
+        type: string
+      available:
+        type: integer
+      effective:
+        type: integer
+      height:
+        type: integer
+      mintingAverage:
+        type: integer
+      regular:
+        type: integer
     type: object
 info:
   contact:
@@ -34,6 +123,131 @@ info:
   title: v.systems NFT bundle
   version: "1.0"
 paths:
+  /api/contract/mintNFT:
+    post:
+      consumes:
+      - application/json
+      description: This operation will coast 0.3vsys, please make sure your gas pool wallet has balance
+      parameters:
+      - description: NFT description
+        in: formData
+        name: description
+        type: string
+      - description: Transaction attachment
+        in: formData
+        name: attachment
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.NFT'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.RespJsonObj'
+      summary: Mint a NFT
+      tags:
+      - Contract
+  /api/contract/registerNFT:
+    post:
+      consumes:
+      - application/json
+      description: Before your register the contract, please make sure you have a maker wallet, and your wallet have 100 vsys at least.
+      parameters:
+      - description: NFT contract description
+        in: formData
+        name: description
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Contract'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.RespJsonObj'
+      summary: Register NFT contract
+      tags:
+      - Contract
+  /api/contract/sendNFT:
+    post:
+      consumes:
+      - application/json
+      description: NFT will be sent from maker wallet to recipient, this operation will coast 0.3vsys
+      parameters:
+      - description: NFT index
+        in: formData
+        name: nft_index
+        required: true
+        type: integer
+      - description: NFT receiver
+        in: formData
+        name: recipient
+        required: true
+        type: string
+      - description: Transaction attachment
+        in: formData
+        name: attachment
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: transfer NFT transaction id
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.RespJsonObj'
+      summary: Send NFT to recipient wallet
+      tags:
+      - Contract
+  /api/contract/transferNFT:
+    post:
+      consumes:
+      - application/json
+      description: This operation will coast 0.3vsys, please make sure your gas pool wallet has balance
+      parameters:
+      - description: Seed for NFT owner
+        in: formData
+        name: owner_seed
+        required: true
+        type: string
+      - description: NFT index
+        in: formData
+        name: nft_index
+        required: true
+        type: integer
+      - description: NFT receiver
+        in: formData
+        name: recipient
+        required: true
+        type: string
+      - description: Transaction attachment
+        in: formData
+        name: attachment
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: transfer NFT transaction id
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.RespJsonObj'
+      summary: Transfer NFT
+      tags:
+      - Contract
   /api/wallet/create:
     get:
       consumes:
@@ -49,7 +263,55 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/server.RespJsonObj'
-      summary: Create a vsys wallet
+      summary: Create a v chain wallet
+      tags:
+      - Wallet
+  /api/wallet/detail:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Wallet address
+        in: query
+        name: address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.WalletDetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.RespJsonObj'
+      summary: Get wallet detail
+      tags:
+      - Wallet
+  /api/wallet/import:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: wallet mnemonic seed
+        in: formData
+        name: seed
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Wallet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.RespJsonObj'
+      summary: Import a v chain wallet
       tags:
       - Wallet
 swagger: "2.0"
