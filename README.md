@@ -5,5 +5,5 @@ A golang wrapper for vsys api service.
 Configure the "config.json" file before run the api server. 
 
 ```
-./bin/vsys_darwin api 
+go run main.go api
 ```
